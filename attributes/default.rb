@@ -1,0 +1,16 @@
+default['atom']['packages'] = [ 'autoclose-html',
+                                'busy-signal',
+                                'go-debug',
+                                'go-plus',
+                                'go-signature-statusbar',
+                                'hyperclick',
+                                'import',
+                                'intentions',
+                                'language-docker',
+                                'linter',
+                                'linter-docker',
+                                'linter-ui-default',
+                                'markdown-writer',
+                                'multi-cursor',
+                                'language-chef'
+                              ]

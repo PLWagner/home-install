@@ -11,6 +11,7 @@ directory '/tmp/test' do
   group 'staff'
   mode '0755'
   action :create
+  not_if { ::File.directory?("/tmp/test") }
 end
 
 homebrew_package 'ffmpeg' do
@@ -35,7 +36,26 @@ dmg_package 'VirtualBox' do
   source 'https://download.virtualbox.org/virtualbox/5.2.6/VirtualBox-5.2.6-120293-OSX.dmg'
 end
 
-# homebrew_cask "google-chrome"
-# homebrew_cask "1password"
+homebrew_cask "google-chrome"
+homebrew_cask "1password"
+homebrew_cask "alfred"
+
+# Atom stuff
+homebrew_cask "atom"
+
+node['atom']['packages'].each do |pkg|
+  execute "Install #{pkg}" do
+    command "/Applications/Atom.app/Contents/Resources/app/apm/bin/apm install #{pkg}"
+    not_if { ::File.directory?("#{ENV['HOME']}/.atom/packages/#{pkg}") }
+  end
+end
+
+cookbook_file "#{ENV['HOME']}/.atom/keymap.cson" do
+  source 'keymap.cson'
+  mode '0644'
+  owner 'pwagner'
+  group 'admin'
+end
+
 
 # mplayer avec libdvdread et l'autre truc
