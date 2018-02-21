@@ -6,28 +6,13 @@
 
 include_recipe 'homebrew'
 
-directory '/tmp/test' do
-  owner 'pwagner'
-  group 'staff'
-  mode '0755'
-  action :create
-  not_if { ::File.directory?("/tmp/test") }
-end
-
-homebrew_package 'ffmpeg' do
-  homebrew_user 'pwagner'
-  options '--with-tools --with-wavpack --with-webp --with-x265
-           --with-zeromq --with-openssl--with-openjpeg --with-openh264
-           --with-libvorbis --with-libssh --with-libvidstab
-           --with-libbluray --with-fdk-aac --with-freetype --with-libass'
-  provider Chef::Provider::Package::Homebrew
-  action :install
-end
-
-homebrew_package 'zsh' do
-  homebrew_user 'pwagner'
-  provider Chef::Provider::Package::Homebrew
-  action :install
+node['homebrew']['packages'].each do |pkg, val|
+  homebrew_package pkg do
+    homebrew_user node['user']['name']
+    options val['options']
+    provider Chef::Provider::Package::Homebrew
+    action :install
+  end
 end
 
 dmg_package 'VirtualBox' do
@@ -36,13 +21,14 @@ dmg_package 'VirtualBox' do
   source 'https://download.virtualbox.org/virtualbox/5.2.6/VirtualBox-5.2.6-120293-OSX.dmg'
 end
 
-homebrew_cask "google-chrome"
-homebrew_cask "1password"
-homebrew_cask "alfred"
+node['homebrew']['casks'].each do |cask|
+  homebrew_cask cask
+end
+
+# iTerm Stuff
+#TODO
 
 # Atom stuff
-homebrew_cask "atom"
-
 node['atom']['packages'].each do |pkg|
   execute "Install #{pkg}" do
     command "/Applications/Atom.app/Contents/Resources/app/apm/bin/apm install #{pkg}"
@@ -53,9 +39,18 @@ end
 cookbook_file "#{ENV['HOME']}/.atom/keymap.cson" do
   source 'keymap.cson'
   mode '0644'
-  owner 'pwagner'
-  group 'admin'
+  owner node['user']['name']
+  group node['user']['group']
 end
 
+# Zsh + Oh-my-zsh Stuff
+
+# Vim Stuff
+
+# SSH Stuff
+
+# Gpg stuff
+
+# OSx system stuff
 
 # mplayer avec libdvdread et l'autre truc

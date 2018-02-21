@@ -9,6 +9,9 @@ DEPENDENCIES
 GRAPH
   dmg (4.1.0)
   home-install (0.1.0)
+    dmg (>= 0.0.0)
+    homebrew (>= 0.0.0)
+    homebrew_packages (>= 0.0.0)
   homebrew (4.3.0)
   homebrew_packages (0.4.1)
     homebrew (>= 0.0.0)
