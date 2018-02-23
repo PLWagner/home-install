@@ -1,0 +1,125 @@
+export HOME=/Users/pwagner
+export CLICOLOR=1
+export EDITOR="/usr/bin/vim"
+export TERM="xterm-256color"
+export LC_ALL=en_US.UTF-8
+
+# Go stuff
+export GOPATH="~/src/go"
+
+# PATH
+#
+export PATH="$PATH:$HOME/.rvm/bin:$GOPATH/bin:/usr/local/go/bin:$HOME/bin"
+
+# thefuck
+eval $(thefuck --alias shit)
+
+# ZSH stuff
+#
+export ZSH=~/.oh-my-zsh
+ZSH_THEME="mh"
+DISABLE_LS_COLORS="false"
+
+# Uncomment the following line to enable command auto-correction.
+# ENABLE_CORRECTION="true"
+
+# Uncomment the following line to display red dots whilst waiting for completion.
+# COMPLETION_WAITING_DOTS="true"
+
+# Uncomment the following line if you want to change the command execution time
+# stamp shown in the history command output.
+# The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
+HIST_STAMPS="dd/mm/yyyy"
+
+source ~/.oh-my-zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+plugins=(git docker vagrant chef knife kubectl)
+
+krun() {
+      kubectl get nodes | awk 'NR<2{next}{print $1}' | xargs -t -I % ssh % $1
+}
+
+# SSH stuff
+#
+if [[ -n $SSH_CONNECTION ]]; then
+  export EDITOR='vim'
+else
+  export EDITOR='mvim'
+fi
+
+#################
+# Aliases stuff #
+#################
+
+# ls aliases
+alias ls="ls -l"
+
+# RVM alaises
+#
+alias rgu="rvm gemset use"
+
+# Kubectl alaises
+#
+alias kk="kubectl"
+alias kkuc="kubectl config use-context"
+alias kkgc="kubectl config get-contexts"
+
+# Knife aliases
+#
+alias kb="knife block"
+
+# Knife nodes aliases
+alias knl="knife node list"
+alias kns="knife node show"
+alias kne="knife node edit"
+
+
+# Knife data bags aliases
+alias kdbl="knife data bag list"
+alias kdbs="knife data bag show"
+alias kdde="knife data bag edit"
+alias kdbc="knife data bag create"
+alias kdbe-lp="knife data bag --secret-file=/Users/pl/.chef/encrypted_data_bag_secret edit"
+alias kdbs-lp="knife data bag --secret-file=/Users/pl/.chef/encrypted_data_bag_secret show -F json"
+alias kdbc-lp="knife data bag --secret-file=/Users/pl/.chef/encrypted_data_bag_secret create"
+alias kdbe-ts="knife data bag --secret-file=/Users/pl/.chef/encrypted_data_bag_secret_ts edit"
+alias kdbs-ts="knife data bag --secret-file=/Users/pl/.chef/encrypted_data_bag_secret_ts show -F json"
+alias kdbc-ts="knife data bag --secret-file=/Users/pl/.chef/encrypted_data_bag_secret_ts create"
+
+# Knife cookbooks aliases
+alias kcl="knife cookbook list"
+alias kcs="knife cookbook show"
+alias kcd="knife cookbook download"
+alias kcu="knife cookbook upload"
+
+# Knife roles aliases
+alias krl="knife role list"
+alias krs="knife role show"
+alias kre="knife role edit"
+
+fpath=(~/.zsh/completion $fpath)
+autoload -Uz compinit && compinit -i
+
+# Docker training first week in Nuglif
+#
+#BASEXRUN='docker run -v $HOME/:/root/ -v $HOME:$HOME -v /:/host -e LANG=$LANG --security-opt seccomp:unconfined -w /host/$PWD --rm -ti nud-docker-registry.lapresse.ca:5000/cli-toolkit:latest'
+#alias xrun="$BASEXRUN "
+#alias php="$BASEXRUN /usr/local/bin/php"
+#alias phing="$BASEXRUN /usr/local/bin/phing"
+#alias composer="$BASEXRUN /usr/local/bin/composer"
+#alias genrb="$BASEXRUN /usr/bin/genrb"
+#alias dbash="$BASEXRUN bash"
+#alias dzsh="$BASEXRUN zsh"
+
+# Git stuff
+#
+
+# Shotgun stuff
+#
+export rvmsudo_secure_path=1
+
+# Python stuff
+#
+export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python3
+
+source <(kubectl completion zsh)

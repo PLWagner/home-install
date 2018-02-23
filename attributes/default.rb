@@ -6,6 +6,11 @@ default['homebrew']['casks'] = [
                                  'alfred',
                                  '1password',
                                  'iterm2',
+                                 'istat-menus',
+                                 'docker',
+                                 'evernote',
+                                 'caffeine',
+                                 'firefox'
                                ]
 default['homebrew']['packages'] = {
                                     'ffmpeg' => {

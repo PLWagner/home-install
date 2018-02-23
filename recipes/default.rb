@@ -44,6 +44,26 @@ cookbook_file "#{ENV['HOME']}/.atom/keymap.cson" do
 end
 
 # Zsh + Oh-my-zsh Stuff
+execute "Change shell for #{node['user']['name']}" do
+  command "sudo chsh /usr/local/bin/zsh #{node['user']['name']}"
+  action :run
+  not_if "dscl . -read /Users/#{node['user']['name']} UserShell | grep zsh"
+end
+
+execute 'Install oh-my-zsh' do
+  command 'curl -L http://install.ohmyz.sh | sh'
+  user node['user']['name']
+  action :run
+  not_if { ::File.directory?("#{ENV['HOME']}/.oh-my-zsh") }
+end
+
+# template "#{ENV['HOME']}/.zshrc" do
+#   source 'zshrc.erb'
+#   owner node['user']['name']
+#   group 'staff'
+#   # mode '0644'
+# end
+
 
 # Vim Stuff
 
