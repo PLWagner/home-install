@@ -23,7 +23,7 @@ end
 ########
 node['dmg']['packages'].each do |pkg|
   dmg_package "#{pkg['name']}" do
-    owner 'pwagner'
+    owner node['user']['name']
     volumes_dir '/Volumes'
     source pkg['source']
   end
