@@ -6,6 +6,9 @@
 
 include_recipe 'homebrew'
 
+#################
+# Brew Packages #
+#################
 node['homebrew']['packages'].each do |pkg, val|
   homebrew_package pkg do
     homebrew_user node['user']['name']
@@ -15,20 +18,29 @@ node['homebrew']['packages'].each do |pkg, val|
   end
 end
 
-dmg_package 'VirtualBox' do
-  owner 'pwagner'
-  volumes_dir '/Volumes'
-  source 'https://download.virtualbox.org/virtualbox/5.2.6/VirtualBox-5.2.6-120293-OSX.dmg'
+########
+# DMGs #
+########
+node['dmg']['packages'].each do |pkg|
+  dmg_package "#{pkg['name']}" do
+    owner 'pwagner'
+    volumes_dir '/Volumes'
+    source pkg['source']
+  end
 end
 
 node['homebrew']['casks'].each do |cask|
   homebrew_cask cask
 end
 
-# iTerm Stuff
-#TODO
+###############
+# iTerm Stuff #
+###############
 
-# Atom stuff
+
+##############
+# Atom stuff #
+##############
 node['atom']['packages'].each do |pkg|
   execute "Install #{pkg}" do
     command "/Applications/Atom.app/Contents/Resources/app/apm/bin/apm install #{pkg}"
@@ -43,7 +55,9 @@ cookbook_file "#{ENV['HOME']}/.atom/keymap.cson" do
   group node['user']['group']
 end
 
-# Zsh + Oh-my-zsh Stuff
+#########################
+# Zsh + Oh-my-zsh Stuff #
+#########################
 execute "Change shell for #{node['user']['name']}" do
   command "sudo chsh /usr/local/bin/zsh #{node['user']['name']}"
   action :run
@@ -57,13 +71,37 @@ execute 'Install oh-my-zsh' do
   not_if { ::File.directory?("#{ENV['HOME']}/.oh-my-zsh") }
 end
 
-# template "#{ENV['HOME']}/.zshrc" do
-#   source 'zshrc.erb'
-#   owner node['user']['name']
-#   group 'staff'
-#   # mode '0644'
-# end
+directory "#{ENV['HOME']}/.oh-my-zsh/custom/themes" do
+  owner node['user']['name']
+  group node['user']['group']
+  mode '0751'
+  action :create
+end
 
+cookbook_file "#{ENV['HOME']}/.oh-my-zsh/custom/themes/mh-pl.zsh-theme" do
+  source 'mh-pl.zsh-theme'
+  mode '0644'
+  owner node['user']['name']
+  group node['user']['group']
+end
+
+template "#{ENV['HOME']}/.zshrc" do
+  source 'zshrc.erb'
+  owner node['user']['name']
+  group node['user']['group']
+  mode '0644'
+end
+
+execute 'Install zsh syntax highlighting' do
+  command "cd #{ENV['HOME']}/.oh-my-zsh && /usr/local/bin/git clone git://github.com/zsh-users/zsh-syntax-highlighting.git && cd"
+  user node['user']['name']
+  action :run
+  not_if { ::File.directory?("#{ENV['HOME']}/.oh-my-zsh/zsh-syntax-highlighting") }
+end
+
+##################
+# Python 3 Stuff #
+##################
 
 # Vim Stuff
 

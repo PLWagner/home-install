@@ -9,39 +9,40 @@
 # if superuser make the username green
 if [ $UID -eq 0 ]; then NCOLOR="green"; else NCOLOR="white"; fi
 
-get_kubectl_context() {
-  #context=$(kubectl config view | grep current-context | awk '{print $2}')
-  context=$(grep current-context ~/.kube/config | awk '{print $2}')
-   if [ $context = "prod" ];then
-     echo -n "%{$fg[green]%}%B$context%{$reset_color%} | "
-   else
-     echo -n "%{$fg[white]%}%B$context%{$reset_color%} | "
-   fi
-}
+# get_kubectl_context() {
+#   #context=$(kubectl config view | grep current-context | awk '{print $2}')
+#   context=$(grep current-context ~/.kube/config | awk '{print $2}')
+#    if [ $context = "prod" ];then
+#      echo -n "%{$fg[green]%}%B$context%{$reset_color%} | "
+#    else
+#      echo -n "%{$fg[white]%}%B$context%{$reset_color%} | "
+#    fi
+# }
 
-knife_block_environment(){
-  if [ -f ~/.chef/knife.rb ]; then
-    WHICH_KNIFE=$(command readlink ~/.chef/knife.rb | tr '/' ' ' | awk '{print $NF}')
-    case $WHICH_KNIFE in
-      knife-ts.rb)
-        echo "%{$fg[blue]%}TS%{$reset_color%} | "
-      ;;
-      knife-lp.rb)
-        echo "%{$fg[red]%}LP%{$reset_color%} | "
-      ;;
-      knife-local.rb)
-        echo "%{$fg[green]%}LOCAL%{$reset_color%} | "
-      ;;
-
-      *)
-        echo "$WHICH_KNIFE "
-      ;;
-    esac
-  fi
-}
+# knife_block_environment(){
+#   if [ -f ~/.chef/knife.rb ]; then
+#     WHICH_KNIFE=$(command readlink ~/.chef/knife.rb | tr '/' ' ' | awk '{print $NF}')
+#     case $WHICH_KNIFE in
+#       knife-ts.rb)
+#         echo "%{$fg[blue]%}TS%{$reset_color%} | "
+#       ;;
+#       knife-lp.rb)
+#         echo "%{$fg[red]%}LP%{$reset_color%} | "
+#       ;;
+#       knife-local.rb)
+#         echo "%{$fg[green]%}LOCAL%{$reset_color%} | "
+#       ;;
+#
+#       *)
+#         echo "$WHICH_KNIFE "
+#       ;;
+#     esac
+#   fi
+# }
 
 # prompt
-PROMPT='$(get_kubectl_context)$(knife_block_environment)[%{$fg[$NCOLOR]%}%B%n%b%{$reset_color%}:%{$fg[cyan]%}%30<...<%~%<<%{$reset_color%}]%(!.#.$) '
+#PROMPT='$(get_kubectl_context)$(knife_block_environment)[%{$fg[$NCOLOR]%}%B%n%b%{$reset_color%}:%{$fg[cyan]%}%30<...<%~%<<%{$reset_color%}]%(!.#.$) '
+PROMPT='[%{$fg[$NCOLOR]%}%B%n%b%{$reset_color%}:%{$fg[cyan]%}%30<...<%~%<<%{$reset_color%}]%(!.#.$) '
 RPROMPT='$(git_prompt_info)'
 
 # git theming
