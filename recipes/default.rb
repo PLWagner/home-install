@@ -33,11 +33,6 @@ node['homebrew']['casks'].each do |cask|
   homebrew_cask cask
 end
 
-###############
-# iTerm Stuff #
-###############
-
-
 ##############
 # Atom stuff #
 ##############
@@ -99,11 +94,31 @@ execute 'Install zsh syntax highlighting' do
   not_if { ::File.directory?("#{ENV['HOME']}/.oh-my-zsh/zsh-syntax-highlighting") }
 end
 
+#############
+# Vim Stuff #
+#############
+execute 'Install Vim plugins and configs' do
+  command '/usr/local/bin/git clone https://github.com/slamont/Personal-Vim-Configs.git .vim'
+  creates "#{ENV['HOME']}/.vim/setup_vim.sh"
+  user node['user']['name']
+  cwd ENV['HOME']
+  action :run
+end
+
+execute 'Setup Vim' do
+  command './setup_vim.sh'
+  creates "#{ENV['HOME']}/.vimrc"
+  cwd "#{ENV['HOME']}/.vim"
+  action :run
+end
+
+###############
+# iTerm Stuff #
+###############
+
 ##################
 # Python 3 Stuff #
 ##################
-
-# Vim Stuff
 
 # SSH Stuff
 
