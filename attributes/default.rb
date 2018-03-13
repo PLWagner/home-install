@@ -1,5 +1,6 @@
 default['user']['name'] = 'pwagner'
 default['user']['group'] = 'staff'
+default['terminal']['cursor_speed'] = 2
 default['dmg']['packages'] =
 [
   {

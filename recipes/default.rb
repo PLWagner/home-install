@@ -88,10 +88,10 @@ template "#{ENV['HOME']}/.zshrc" do
 end
 
 execute 'Install zsh syntax highlighting' do
-  command "cd #{ENV['HOME']}/.oh-my-zsh && /usr/local/bin/git clone git://github.com/zsh-users/zsh-syntax-highlighting.git && cd"
+  command "cd #{ENV['HOME']}/.oh-my-zsh/custom/plugins && /usr/local/bin/git clone git://github.com/zsh-users/zsh-syntax-highlighting.git && cd"
   user node['user']['name']
   action :run
-  not_if { ::File.directory?("#{ENV['HOME']}/.oh-my-zsh/zsh-syntax-highlighting") }
+  not_if { ::File.directory?("#{ENV['HOME']}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting") }
 end
 
 #############
@@ -109,12 +109,59 @@ execute 'Setup Vim' do
   command './setup_vim.sh'
   creates "#{ENV['HOME']}/.vimrc"
   cwd "#{ENV['HOME']}/.vim"
+  user node['user']['name']
   action :run
 end
+
+####################
+# OSx system stuff #
+####################
+
+execute 'Speed up terminal cursor' do
+  command "defaults write NSGlobalDomain KeyRepeat -int #{node['terminal']['cursor_speed']}"
+  user node['user']['name']
+  action :run
+  not_if "defaults read NSGlobalDomain KeyRepeat | grep #{node['terminal']['cursor_speed']}"
+end
+
+#defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+# Avoid creating .DS_Store files on network volumes
+#defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
+# Show item info below desktop icons
+#/usr/libexec/PlistBuddy -c "Set :DesktopViewSettings:IconViewSettings:showItemInfo true" ~/Library/Preferences/com.apple.finder.plist
+# Enable tap to click (Trackpad)
+# defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+
+# Copy email addresses as `foo@example.com` instead of `Foo Bar <foo@example.com>` in Mail.app
+# defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false
 
 ###############
 # iTerm Stuff #
 ###############
+
+directory "#{ENV['HOME']}/src/iterm2" do
+  owner node['user']['name']
+  group node['user']['group']
+  mode '0751'
+  action :create
+end
+
+cookbook_file "#{ENV['HOME']}/src/iterm2/com.googlecode.iterm2.plist" do
+  source 'com.googlecode.iterm2.plist'
+  owner node['user']['name']
+  group node['user']['group']
+  mode '0751'
+  action :create
+  not_if { ::File.exist?("#{ENV['HOME']}/src/iterm2/com.googlecode.iterm2.plist") }
+end
+
+execute 'Load config for iTerm2' do
+  command "defaults write com.googlecode.iterm2.plist PrefsCustomFolder -string '#{ENV['HOME']}/src/iterm2' && defaults write com.googlecode.iterm2.plist LoadPrefsFromCustomFolder -bool true"
+  user node['user']['name']
+  cwd "#{ENV['HOME']}/src/iterm2"
+  action :run
+  not_if "defaults read com.googlecode.iterm2.plist LoadPrefsFromCustomFolder | grep 1"
+end
 
 ##################
 # Python 3 Stuff #
@@ -124,6 +171,5 @@ end
 
 # Gpg stuff
 
-# OSx system stuff
 
 # mplayer avec libdvdread et l'autre truc
