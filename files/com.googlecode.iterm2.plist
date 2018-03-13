@@ -332,6 +332,8 @@
 	<string>144 203 796 473 0 0 2560 1418 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
 	<string>56 930 570 452 0 0 2560 1418 </string>
+	<key>NSWindow Frame iTerm Window 1</key>
+	<string>343 181 1277 656 0 0 2560 1418 </string>
 	<key>NeverWarnAboutOverrides</key>
 	<true/>
 	<key>NeverWarnAboutOverrides_selection</key>
@@ -1717,6 +1719,8 @@ Broadcast Input.Toggle Broadcast Input to Current Session</string>
 		<string>0005</string>
 		<string>0006</string>
 	</array>
+	<key>OnlyWhenMoreTabs</key>
+	<false/>
 	<key>PointerActions</key>
 	<dict>
 		<key>Button,1,1,,</key>
@@ -1752,6 +1756,8 @@ Broadcast Input.Toggle Broadcast Input to Current Session</string>
 	</dict>
 	<key>PrefsCustomFolder</key>
 	<string>/Users/pwagner/src/iterm2</string>
+	<key>PromptOnQuit</key>
+	<false/>
 	<key>SUEnableAutomaticChecks</key>
 	<true/>
 	<key>SUFeedAlternateAppNameKey</key>
