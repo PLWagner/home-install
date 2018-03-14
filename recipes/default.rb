@@ -167,6 +167,13 @@ end
 # Python 3 Stuff #
 ##################
 
+# Chef Stuff
+execute 'Install knife-block' do
+  command '/usr/local/bin/chef gem install knife-block'
+  action :run
+  not_if '/usr/local/bin/chef gem list | grep knife-block'
+end
+
 # SSH Stuff
 
 # Gpg stuff

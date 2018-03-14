@@ -19,7 +19,8 @@ default['homebrew']['casks'] =
   'docker',
   'evernote',
   'caffeine',
-  'firefox'
+  'firefox',
+  'hipchat'
 ]
 
 default['homebrew']['packages'] =
